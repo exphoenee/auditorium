@@ -1,12 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Auditorium } from '../components/Auditorium/Auditorium.js';
 
-vi.mock('../../utils/domelemjs/domelemjs.js', () => ({
+vi.mock('domelemjs', () => ({
   createDOMElem: vi.fn(() => ({ classList: { add: vi.fn(), remove: vi.fn() } })),
-  div: 'div',
-  input: 'input',
-  button: 'button',
-  p: 'p',
 }));
 
 const testSectors = [

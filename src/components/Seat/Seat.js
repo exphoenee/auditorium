@@ -1,5 +1,5 @@
 import { TicketCategory } from '../../model/Tickets/TicketCategory.js';
-import { createDOMElem, div } from '../../utils/domelemjs/domelemjs.js';
+import { createDOMElem } from 'domelemjs';
 
 class Seat {
   constructor({
@@ -25,7 +25,7 @@ class Seat {
 
   render(parent) {
     this.seatDOM = createDOMElem({
-      tag: div,
+      tag: "div",
       attrs: {
         class: `seat seatNr-${this.seatNr} category-${
           this.seatCategory.getCategory()

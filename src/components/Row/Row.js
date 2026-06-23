@@ -1,6 +1,6 @@
 import { Seat } from '../Seat/Seat.js';
 import { trt } from '../../model/language/language.js';
-import { createDOMElem, div, p } from '../../utils/domelemjs/domelemjs.js';
+import { createDOMElem } from 'domelemjs';
 
 class Row {
   constructor({ rowConf, rowNr, sectorId, sectorName, sectorPreference }) {
@@ -36,7 +36,7 @@ class Row {
 
   render(parent, mirrored, offset) {
     const rowContainer = createDOMElem({
-      tag: div,
+      tag: "div",
       attrs: {
         class: `row rowNr-${this.rowNr} row-container`,
       },
@@ -44,7 +44,7 @@ class Row {
     });
 
     createDOMElem({
-      tag: p,
+      tag: "p",
       attrs: {
         class: `row rowNr-${this.rowNr} row-container`,
       },
@@ -59,7 +59,7 @@ class Row {
       if (offset > 0 && index == toRender.length - 1) {
         for (let i = 0; i < this.rowNr; i++) {
           createDOMElem({
-            tag: div,
+            tag: "div",
             attrs: { class: "offset" },
             parent: rowContainer,
           });

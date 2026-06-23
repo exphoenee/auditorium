@@ -330,6 +330,13 @@ html, body {
   font-size: 15px;
 }
 
+.panel-btn.github-btn {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .reopen-btn {
   position: fixed;
   bottom: 16px;

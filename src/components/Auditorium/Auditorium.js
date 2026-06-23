@@ -1,5 +1,5 @@
 import { Sector } from '../Sector/Sector.js';
-import { createDOMElem, div, input, button, p, span } from '../../utils/domelemjs/domelemjs.js';
+import { createDOMElem } from 'domelemjs';
 import { CanvasRenderer } from '../CanvasRenderer/CanvasRenderer.js';
 
 class Auditorium {
@@ -117,7 +117,7 @@ class Auditorium {
     container.innerHTML = "";
     if (!results.length) {
       createDOMElem({
-        tag: p,
+        tag: "p",
         attrs: { class: "result-row" },
         content: "Unfortunately there is no solution...",
         parent: container,
@@ -126,7 +126,7 @@ class Auditorium {
     }
 
     const header = createDOMElem({
-      tag: div,
+      tag: "div",
       attrs: { class: "result-header" },
       parent: container,
     });
@@ -247,31 +247,44 @@ class Auditorium {
     };
 
     const panel = createDOMElem({
-      tag: div,
+      tag: "div",
       attrs: { class: "panel" },
       parent: parent,
     });
 
     const header = createDOMElem({
-      tag: div,
+      tag: "div",
       attrs: { class: "panel-header" },
       parent: panel,
     });
     createDOMElem({
-      tag: span,
+      tag: "span",
       attrs: { class: "panel-title" },
       content: "Auditorium",
       parent: header,
     });
 
     const headerBtns = createDOMElem({
-      tag: div,
+      tag: "div",
       attrs: { class: "panel-header-btns" },
       parent: header,
     });
 
+    const githubBtn = createDOMElem({
+      tag: "a",
+      attrs: {
+        class: "panel-btn github-btn",
+        title: "GitHub",
+        href: "https://github.com/exphoenee/auditorium",
+        target: "_blank",
+        rel: "noopener noreferrer",
+      },
+      parent: headerBtns,
+    });
+    githubBtn.innerHTML = `<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>`;
+
     createDOMElem({
-      tag: button,
+      tag: "button",
       attrs: { class: "panel-btn help-btn", title: "Help" },
       content: "?",
       handleEvent: {
@@ -282,7 +295,7 @@ class Auditorium {
     });
 
     const reopenBtn = createDOMElem({
-      tag: button,
+      tag: "button",
       attrs: { class: "reopen-btn", title: "Open panel" },
       content: "\u2630",
       parent: parent,
@@ -294,7 +307,7 @@ class Auditorium {
     });
 
     createDOMElem({
-      tag: button,
+      tag: "button",
       attrs: { class: "panel-btn close-btn", title: "Close panel" },
       content: "\u00D7",
       handleEvent: {
@@ -308,13 +321,13 @@ class Auditorium {
     });
 
     const row1 = createDOMElem({
-      tag: div,
+      tag: "div",
       attrs: { class: "reserve-panel" },
       parent: panel,
     });
     row1.appendChild(makeSpinner("max", 4, 2, 8));
     createDOMElem({
-      tag: button,
+      tag: "button",
       attrs: { class: "reserve" },
       handleEvent: {
         event: "click",
@@ -328,13 +341,13 @@ class Auditorium {
     });
 
     const row2 = createDOMElem({
-      tag: div,
+      tag: "div",
       attrs: { class: "reserve-panel" },
       parent: panel,
     });
     row2.appendChild(makeSpinner("random", 0.2, 0.2, 1, 0.1));
     createDOMElem({
-      tag: button,
+      tag: "button",
       attrs: { class: "randomize" },
       handleEvent: {
         event: "click",
@@ -350,7 +363,7 @@ class Auditorium {
     });
 
     createDOMElem({
-      tag: div,
+      tag: "div",
       attrs: { id: "results", class: "results" },
       parent: panel,
     });

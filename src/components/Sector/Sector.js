@@ -1,5 +1,5 @@
 import { Row } from '../Row/Row.js';
-import { createDOMElem, div, p } from '../../utils/domelemjs/domelemjs.js';
+import { createDOMElem } from 'domelemjs';
 
 class Sector {
   constructor({
@@ -60,7 +60,7 @@ class Sector {
 
   render(parent) {
     const sectorContainer = createDOMElem({
-      tag: div,
+      tag: "div",
       attrs: {
         class: `sector-container ${this.name
           .replaceAll(" ", "-")
@@ -75,11 +75,11 @@ class Sector {
       parent: parent,
       children: [
         {
-          tag: div,
+          tag: "div",
           attrs: {
             class: `title`,
           },
-          children: [{ tag: p, content: this.name }],
+          children: [{ tag: "p", content: this.name }],
         },
       ],
     });
