@@ -1,5 +1,5 @@
-import { TicketCategory } from '../model/Tickets/TicketCategory.js';
-import { createDOMElem, div } from '../utils/domelemjs/domelemjs.js';
+import { TicketCategory } from '../../model/Tickets/TicketCategory.js';
+import { createDOMElem, div } from '../../utils/domelemjs/domelemjs.js';
 
 class Seat {
   constructor({

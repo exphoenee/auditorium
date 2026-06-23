@@ -25,6 +25,6 @@ const auditorium = new Auditorium([
   boxRight3,
 ]);
 
-auditorium.render("app");
+auditorium.renderCanvas(document.getElementById('app'));
 auditorium.randomReservation(0.2);
 auditorium.reserve(4);

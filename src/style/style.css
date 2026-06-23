@@ -1,103 +1,450 @@
-/* styling the app */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #1a1a2e;
+}
+
 #app {
   width: 100%;
   height: 100%;
-  color: black;
-}
-/* styling the stage, yeah i know it is not a good solution, but i would lke to show you that can i solve another way also*/
-#app::after {
-  background: lightcoral;
-  color: white;
-  font-weight: 500;
-  border-radius: 0.125rem;
-  box-shadow: 0.0625rem 0.125rem 0.25rem gray;
-  content: "Stage";
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: 10%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40rem;
-  height: 8rem;
-}
-/* styling the sector */
-.sector-container {
-  padding: 5px;
-  position: fixed;
-  display: block;
-}
-/* this is the naming of the sectors */
-.title p {
-  text-align: center;
-}
-/* styling the rows */
-.row {
-  display: flex;
-  margin: auto 0;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.9rem;
-}
-/* styling the seats */
-.seat {
   position: relative;
-  user-select: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  color: white;
-  font-weight: 900;
-  overflow: hidden;
-  margin: 0.1875rem;
-  aspect-ratio: 1;
-  padding: 0.1875rem;
-  min-width: 0.625rem;
-  border-radius: 0.125rem;
-  box-shadow: 0.0625rem 0.125rem 0.25rem gray;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.7rem;
-  border-bottom: 2px solid gray;
 }
-/* placeholder divs to make the side balcony skewed */
-.offset {
-  position: relative;
-  overflow: hidden;
-  margin: 0.1875rem;
-  aspect-ratio: 1;
-  padding: 0.1875rem;
-  min-width: 0.3125rem;
-  border-radius: 0.125rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.25rem;
-}
-/* making the occupied seats to looking another way */
-.seat.occupied::after {
-  position: absolute;
-  top: 0;
-  left: 0;
-  content: "";
+
+#app canvas {
   display: block;
-  background-color: rgba(0, 0, 0, 0.4);
   width: 100%;
   height: 100%;
 }
-/* styleing the seat categories*/
-.category-0 {
-  background-color: #afefa5;
+
+.panel {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  padding: 16px;
+  z-index: 100;
+  font-size: 13px;
+  background: rgba(15, 15, 30, 0.88);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  color: #e0e0e0;
+  min-width: 320px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
-.category-1 {
-  background-color: #a5d9ef;
+
+.reserve-panel {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
 }
-.category-2 {
-  background-color: #efdba5;
+
+.reserve-panel:last-of-type {
+  margin-bottom: 0;
 }
-.category-3 {
-  background-color: #efa5a5;
+
+.reserve-panel label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  min-width: 60px;
+}
+
+.reserve-panel input {
+  width: 56px;
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.reserve-panel input:focus {
+  border-color: rgba(100, 180, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.reserve-panel input::-webkit-inner-spin-button,
+.reserve-panel input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.reserve-panel input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.spinner-group {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  align-items: stretch;
+}
+
+.spinner-group input[type="number"] {
+  width: 56px;
+  padding: 5px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px 0 0 6px;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  text-align: center;
+}
+
+.spinner-group input[type="number"]:focus {
+  border-color: rgba(100, 180, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.spinner-arrows {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.spinner-arrows button {
+  flex: 1;
+  padding: 0 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: #aaa;
+  cursor: pointer;
+  font-size: 8px;
+  line-height: 1;
+  transition: all 0.15s;
+}
+
+.spinner-arrows button:first-child {
+  border-radius: 0 6px 0 0;
+  border-bottom: none;
+}
+
+.spinner-arrows button:last-child {
+  border-radius: 0 0 6px 0;
+}
+
+.spinner-arrows button:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.spinner-arrows button:active {
+  transform: scale(0.93);
+}
+
+.reserve-panel button {
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ccc;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: all 0.2s;
+}
+
+.reserve-panel button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.reserve-panel button:active {
+  transform: scale(0.97);
+}
+
+.reserve-panel button.reserve {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: rgba(76, 175, 80, 0.3);
+  color: #81c784;
+}
+
+.reserve-panel button.reserve:hover {
+  background: rgba(76, 175, 80, 0.35);
+  color: #a5d6a7;
+}
+
+.reserve-panel button.randomize {
+  background: rgba(100, 149, 237, 0.2);
+  border-color: rgba(100, 149, 237, 0.3);
+  color: #90b4e8;
+}
+
+.reserve-panel button.randomize:hover {
+  background: rgba(100, 149, 237, 0.35);
+  color: #b0d0ff;
+}
+
+.results {
+  max-height: 220px;
+  overflow-y: auto;
+  margin-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  font-size: 11px;
+}
+
+.results::-webkit-scrollbar {
+  width: 4px;
+}
+
+.results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.results::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+.result-header,
+.result-row {
+  display: grid;
+  grid-template-columns: 24px 1fr 40px 1fr 52px;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+}
+
+.result-header {
+  position: sticky;
+  top: 0;
+  background: rgba(15, 15, 30, 0.95);
+  z-index: 1;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #666;
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.result-row {
+  display: grid;
+  grid-template-columns: 24px 1fr 40px 1fr 52px;
+  align-items: center;
+  padding: 4px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.result-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.result-row.best {
+  background: rgba(76, 175, 80, 0.12);
+}
+
+.result-row.best .result-cell {
+  color: #a5d6a7;
+}
+
+.result-cell {
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 3px;
+}
+
+.result-cell:first-child {
+  text-align: center;
+}
+
+.result-cell input[type="radio"] {
+  accent-color: #66bb6a;
+  cursor: pointer;
+  margin: 0;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.panel-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e0e0e0;
+  letter-spacing: 0.3px;
+}
+
+.panel-header-btns {
+  display: flex;
+  gap: 4px;
+}
+
+.panel-btn {
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #aaa;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+
+.panel-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.panel-btn.help-btn {
+  font-style: italic;
+  font-family: Georgia, serif;
+  font-size: 15px;
+}
+
+.reopen-btn {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: rgba(15, 15, 30, 0.85);
+  backdrop-filter: blur(12px);
+  color: #ccc;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+}
+
+.reopen-btn:hover {
+  background: rgba(30, 30, 60, 0.95);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  position: relative;
+  background: rgba(20, 20, 40, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 28px 32px;
+  max-width: 520px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  color: #e0e0e0;
+  box-shadow: 0 16px 64px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #aaa;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.modal h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.modal h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #81c784;
+  margin: 16px 0 6px;
+}
+
+.modal p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #bbb;
+}
+
+.modal ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modal ul li {
+  font-size: 12px;
+  color: #bbb;
+  padding: 3px 0 3px 14px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.modal ul li::before {
+  content: "\2022";
+  position: absolute;
+  left: 0;
+  color: #66bb6a;
 }

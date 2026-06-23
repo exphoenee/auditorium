@@ -1245,4 +1245,4 @@ const [
   "wbr",
 ];
 
-export { createDOMElem, DOMElem, div, p, input, button };
+export { createDOMElem, DOMElem, div, p, input, button, span };

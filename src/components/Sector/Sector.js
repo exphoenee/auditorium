@@ -33,7 +33,7 @@ class Sector {
         sectorPreference,
       });
 
-      this.seatNumber += row.seatNumber;
+      this.seatNumber += row.seatsNumber;
       this.rows.push(row);
     });
   }
