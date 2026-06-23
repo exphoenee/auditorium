@@ -1,6 +1,8 @@
 /* these little object literals containting the properties of a sector  */
 
-boxLeft1 = {
+import { boxMap, sideBalconyMap, midBalconyMap, centralAuditoriumMap } from '../sectorMap/sectorMaps.js';
+
+const boxLeft1 = {
   rows: boxMap, // the rows, are the map of the sector, every row is an array what contains the price category of the seat
   name: "Box left 1.", //name of the sector
   mirrored: false, //it is mirrored or not
@@ -9,7 +11,7 @@ boxLeft1 = {
   angle: 90, //the angle of the sector on the screen given in degree
   sectorPreference: 4, //the preference value of a sector to calculate to position value in a seat neibourghood
 };
-boxLeft2 = {
+const boxLeft2 = {
   rows: boxMap,
   name: "Box left 2.",
   mirrored: false,
@@ -18,7 +20,7 @@ boxLeft2 = {
   angle: 90,
   sectorPreference: 4,
 };
-boxLeft3 = {
+const boxLeft3 = {
   rows: boxMap,
   name: "Box left 3.",
   mirrored: false,
@@ -27,7 +29,7 @@ boxLeft3 = {
   angle: 90,
   sectorPreference: 4,
 };
-sideBalconyLeft = {
+const sideBalconyLeft = {
   rows: sideBalconyMap,
   name: "Balcony left",
   mirrored: true,
@@ -37,7 +39,7 @@ sideBalconyLeft = {
   offset: 1,
   sectorPreference: 3,
 };
-boxRight1 = {
+const boxRight1 = {
   rows: boxMap,
   name: "Box right 1.",
   mirrored: true,
@@ -46,7 +48,7 @@ boxRight1 = {
   angle: -90,
   sectorPreference: 4,
 };
-boxRight2 = {
+const boxRight2 = {
   rows: boxMap,
   name: "Box right 2.",
   mirrored: true,
@@ -55,7 +57,7 @@ boxRight2 = {
   angle: -90,
   sectorPreference: 4,
 };
-boxRight3 = {
+const boxRight3 = {
   rows: boxMap,
   name: "Box right 3.",
   mirrored: true,
@@ -64,7 +66,7 @@ boxRight3 = {
   angle: -90,
   sectorPreference: 4,
 };
-sideBalconyRight = {
+const sideBalconyRight = {
   rows: sideBalconyMap,
   name: "Balcony right",
   mirrored: false,
@@ -74,7 +76,7 @@ sideBalconyRight = {
   offset: 1,
   sectorPreference: 3,
 };
-midBalcony = {
+const midBalcony = {
   rows: midBalconyMap,
   name: "Balcony mid.",
   mirrored: false,
@@ -82,11 +84,18 @@ midBalcony = {
   hor: 50,
   sectorPreference: 2,
 };
-centralAuditorium = {
+const centralAuditorium = {
   rows: centralAuditoriumMap,
   name: "Auditorium",
   mirrored: false,
   vert: 45,
   hor: 50,
   sectorPreference: 1,
+};
+
+export {
+  boxLeft1, boxLeft2, boxLeft3,
+  boxRight1, boxRight2, boxRight3,
+  sideBalconyLeft, sideBalconyRight,
+  midBalcony, centralAuditorium,
 };

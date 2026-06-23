@@ -1,6 +1,6 @@
-/*
-this is the object of the rows, the object gets, the properies of the Auditorium, and the Sector as well, and pass down to the seat component also for later useage
-*/
+import { Seat } from '../Seat/Seat.js';
+import { trt } from '../../model/language/language.js';
+import { createDOMElem, div, p } from '../../utils/domelemjs/domelemjs.js';
 
 class Row {
   constructor({ rowConf, rowNr, sectorId, sectorName, sectorPreference }) {
@@ -8,7 +8,6 @@ class Row {
     this.rowNr = rowNr;
     this.seatsNumber = rowConf.length;
 
-    //here is the seats created in the rows
     rowConf.forEach((category, seatNr) => {
       const thisSeat = new Seat({
         seatNr: seatNr,
@@ -21,27 +20,21 @@ class Row {
       });
       this.seats.push(thisSeat);
     });
-    return this;
   }
 
-  //this method gives back all the seats in a flat array of an entire row
   getAllSeats() {
     return this.seats;
   }
 
-  //this method gives back all the occupied seats in a flat array of an entire row
   getOccupiedSeats() {
     return this.seats.filter((seat) => seat.occupied);
   }
 
-  //this method gives back all the free seats in a flat array of an entire row
   getFreeSeats() {
     return this.seats.filter((seat) => !seat.occupied);
   }
 
-  //this method rendering the row
   render(parent, mirrored, offset) {
-    //creating the row container
     const rowContainer = createDOMElem({
       tag: div,
       attrs: {
@@ -50,8 +43,7 @@ class Row {
       parent: parent,
     });
 
-    //adding the text of row numbering
-    const rowNumbering = createDOMElem({
+    createDOMElem({
       tag: p,
       attrs: {
         class: `row rowNr-${this.rowNr} row-container`,
@@ -60,10 +52,8 @@ class Row {
       parent: rowContainer,
     });
 
-    //if the rows are mirrored in the sectror the revers the array
-    const toRender = mirrored ? this.seats.reverse() : this.seats;
+    const toRender = mirrored ? [...this.seats].reverse() : this.seats;
 
-    //give some offset to the side balcony to get similar results than on the picture shown
     toRender.forEach((seat, index) => {
       seat.render(rowContainer);
       if (offset > 0 && index == toRender.length - 1) {
@@ -78,3 +68,5 @@ class Row {
     });
   }
 }
+
+export { Row };

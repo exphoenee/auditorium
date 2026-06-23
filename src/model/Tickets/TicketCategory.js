@@ -1,9 +1,7 @@
-/* this is the class of a ticket, i dont remember why i made this, but it works well */
 class TicketCategory {
   constructor(seatCategory) {
-    this.category = seatCategory;
+    this.seatCategory = seatCategory;
     this.priceList = { 0: 2000, 1: 3000, 2: 4000, 3: 5000 };
-    return this;
   }
 
   getPrice() {
@@ -12,8 +10,10 @@ class TicketCategory {
   getCategory() {
     return this.seatCategory;
   }
-  setCategory() {
+  setCategory(seatCategory) {
     this.seatCategory = seatCategory;
     return this;
   }
 }
+
+export { TicketCategory };

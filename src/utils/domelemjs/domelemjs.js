@@ -1244,3 +1244,5 @@ const [
   "video",
   "wbr",
 ];
+
+export { createDOMElem, DOMElem, div, p, input, button };
