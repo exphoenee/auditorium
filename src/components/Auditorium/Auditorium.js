@@ -204,7 +204,6 @@ class Auditorium {
     this.addPanel(container);
     this.canvasRenderer = new CanvasRenderer(this);
     this.canvasRenderer.mount(container);
-    this.canvasRenderer.fitToScreen();
   }
 
   addPanel(container) {
@@ -397,9 +396,9 @@ class Auditorium {
       {
         h: "Navigation",
         items: [
-          "Pan: Click and drag anywhere on the canvas",
-          "Zoom: Mouse wheel (zooms toward cursor position)",
-          "Fit to screen: The view auto-fits on load",
+          "Pan: Click and drag (or touch and drag) anywhere on the canvas",
+          "Zoom: Mouse wheel, pinch with two fingers, or the +/− buttons",
+          "Fit to screen: Auto-fits on load, or use the fit button anytime",
         ],
       },
       {
