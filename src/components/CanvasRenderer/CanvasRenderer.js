@@ -350,8 +350,8 @@ class CanvasRenderer {
     let angle = 0;
     if (isBox && isLeft) angle = -90;
     else if (isBox && isRight) angle = 90;
-    else if (sector.name.includes('Balcony left')) angle = -45;
-    else if (sector.name.includes('Balcony right')) angle = 45;
+    else if (sector.name.includes('Balcony left')) angle = -135;
+    else if (sector.name.includes('Balcony right')) angle = 135;
 
     ctx.rotate((angle * Math.PI) / 180);
 
