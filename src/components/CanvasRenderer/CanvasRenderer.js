@@ -23,6 +23,9 @@ class CanvasRenderer {
     this.dragStartY = 0;
     this.dragMoved = false;
 
+    this.pinchStartDist = null;
+    this.pinchStartZoom = 1;
+
     this.seatRects = [];
     this.sectorLayouts = [];
 
@@ -32,11 +35,15 @@ class CanvasRenderer {
     this._onMouseUp = this.onMouseUp.bind(this);
     this._onWheel = this.onWheel.bind(this);
     this._onClick = this.onClick.bind(this);
+    this._onTouchStart = this.onTouchStart.bind(this);
+    this._onTouchMove = this.onTouchMove.bind(this);
+    this._onTouchEnd = this.onTouchEnd.bind(this);
   }
 
   mount(container) {
-    this.canvas.style.cssText = 'display:block;width:100%;height:100%;cursor:grab;';
+    this.canvas.style.cssText = 'display:block;width:100%;height:100%;cursor:grab;touch-action:none;';
     container.appendChild(this.canvas);
+    this.createZoomControls(container);
 
     window.addEventListener('resize', this._onResize);
     this.canvas.addEventListener('mousedown', this._onMouseDown);
@@ -44,8 +51,13 @@ class CanvasRenderer {
     window.addEventListener('mouseup', this._onMouseUp);
     this.canvas.addEventListener('wheel', this._onWheel, { passive: false });
     this.canvas.addEventListener('click', this._onClick);
+    this.canvas.addEventListener('touchstart', this._onTouchStart, { passive: false });
+    this.canvas.addEventListener('touchmove', this._onTouchMove, { passive: false });
+    this.canvas.addEventListener('touchend', this._onTouchEnd);
+    this.canvas.addEventListener('touchcancel', this._onTouchEnd);
 
     this.resize();
+    this.fitToScreen();
   }
 
   destroy() {
@@ -55,7 +67,50 @@ class CanvasRenderer {
     window.removeEventListener('mouseup', this._onMouseUp);
     this.canvas.removeEventListener('wheel', this._onWheel);
     this.canvas.removeEventListener('click', this._onClick);
+    this.canvas.removeEventListener('touchstart', this._onTouchStart);
+    this.canvas.removeEventListener('touchmove', this._onTouchMove);
+    this.canvas.removeEventListener('touchend', this._onTouchEnd);
+    this.canvas.removeEventListener('touchcancel', this._onTouchEnd);
+    if (this.zoomControls) this.zoomControls.remove();
     this.canvas.remove();
+  }
+
+  createZoomControls(container) {
+    const controls = document.createElement('div');
+    controls.className = 'zoom-controls';
+
+    const zoomInBtn = document.createElement('button');
+    zoomInBtn.type = 'button';
+    zoomInBtn.className = 'zoom-btn zoom-in';
+    zoomInBtn.title = 'Zoom in';
+    zoomInBtn.setAttribute('aria-label', 'Zoom in');
+    zoomInBtn.textContent = '+';
+    zoomInBtn.addEventListener('click', () => this.zoomByStep(1.25));
+
+    const zoomOutBtn = document.createElement('button');
+    zoomOutBtn.type = 'button';
+    zoomOutBtn.className = 'zoom-btn zoom-out';
+    zoomOutBtn.title = 'Zoom out';
+    zoomOutBtn.setAttribute('aria-label', 'Zoom out');
+    zoomOutBtn.textContent = '−';
+    zoomOutBtn.addEventListener('click', () => this.zoomByStep(1 / 1.25));
+
+    const fitBtn = document.createElement('button');
+    fitBtn.type = 'button';
+    fitBtn.className = 'zoom-btn zoom-fit';
+    fitBtn.title = 'Fit to screen';
+    fitBtn.setAttribute('aria-label', 'Fit to screen');
+    fitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+    fitBtn.addEventListener('click', () => {
+      this.fitToScreen();
+      this.render();
+    });
+
+    controls.appendChild(zoomInBtn);
+    controls.appendChild(zoomOutBtn);
+    controls.appendChild(fitBtn);
+    container.appendChild(controls);
+    this.zoomControls = controls;
   }
 
   resize() {
@@ -68,9 +123,37 @@ class CanvasRenderer {
     const padding = 80;
     const scaleX = (this.canvas.width - padding * 2) / VIRTUAL_W;
     const scaleY = (this.canvas.height - padding * 2) / VIRTUAL_H;
-    this.zoom = Math.min(scaleX, scaleY);
+    this.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, Math.min(scaleX, scaleY)));
     this.panX = (this.canvas.width - VIRTUAL_W * this.zoom) / 2;
     this.panY = (this.canvas.height - VIRTUAL_H * this.zoom) / 2;
+    this.render();
+  }
+
+  /** Zooms so that `newZoom` is reached while keeping the point under (sx, sy) fixed on screen. */
+  zoomAtPoint(sx, sy, newZoom) {
+    newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, newZoom));
+    this.panX = sx - (sx - this.panX) * (newZoom / this.zoom);
+    this.panY = sy - (sy - this.panY) * (newZoom / this.zoom);
+    this.zoom = newZoom;
+  }
+
+  /** Zooms by `factor` around the canvas center, for the +/- buttons. */
+  zoomByStep(factor) {
+    this.zoomAtPoint(this.canvas.width / 2, this.canvas.height / 2, this.zoom * factor);
+    this.render();
+  }
+
+  getTouchDist(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.hypot(dx, dy);
+  }
+
+  getTouchMidpoint(touches) {
+    return {
+      x: (touches[0].clientX + touches[1].clientX) / 2,
+      y: (touches[0].clientY + touches[1].clientY) / 2,
+    };
   }
 
   screenToCanvas(sx, sy) {
@@ -112,18 +195,18 @@ class CanvasRenderer {
     const my = e.clientY - rect.top;
 
     const factor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
-    const newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.zoom * factor));
-
-    this.panX = mx - (mx - this.panX) * (newZoom / this.zoom);
-    this.panY = my - (my - this.panY) * (newZoom / this.zoom);
-    this.zoom = newZoom;
+    this.zoomAtPoint(mx, my, this.zoom * factor);
     this.render();
   }
 
   onClick(e) {
     if (this.dragMoved) return;
+    this.selectSeatAtClient(e.clientX, e.clientY);
+  }
+
+  selectSeatAtClient(clientX, clientY) {
     const rect = this.canvas.getBoundingClientRect();
-    const { x, y } = this.screenToCanvas(e.clientX - rect.left, e.clientY - rect.top);
+    const { x, y } = this.screenToCanvas(clientX - rect.left, clientY - rect.top);
 
     for (const sr of this.seatRects) {
       if (x >= sr.x && x <= sr.x + sr.w && y >= sr.y && y <= sr.y + sr.h) {
@@ -131,6 +214,61 @@ class CanvasRenderer {
         this.render();
         return;
       }
+    }
+  }
+
+  onTouchStart(e) {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+      this.isDragging = true;
+      this.dragMoved = false;
+      this.dragStartX = e.touches[0].clientX;
+      this.dragStartY = e.touches[0].clientY;
+      this.pinchStartDist = null;
+    } else if (e.touches.length === 2) {
+      this.isDragging = false;
+      this.pinchStartDist = this.getTouchDist(e.touches);
+      this.pinchStartZoom = this.zoom;
+    }
+  }
+
+  onTouchMove(e) {
+    e.preventDefault();
+    const rect = this.canvas.getBoundingClientRect();
+
+    if (e.touches.length === 2 && this.pinchStartDist) {
+      const dist = this.getTouchDist(e.touches);
+      const mid = this.getTouchMidpoint(e.touches);
+      const newZoom = this.pinchStartZoom * (dist / this.pinchStartDist);
+      this.zoomAtPoint(mid.x - rect.left, mid.y - rect.top, newZoom);
+      this.render();
+    } else if (e.touches.length === 1 && this.isDragging) {
+      const dx = e.touches[0].clientX - this.dragStartX;
+      const dy = e.touches[0].clientY - this.dragStartY;
+      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) this.dragMoved = true;
+      this.panX += dx;
+      this.panY += dy;
+      this.dragStartX = e.touches[0].clientX;
+      this.dragStartY = e.touches[0].clientY;
+      this.render();
+    }
+  }
+
+  onTouchEnd(e) {
+    if (e.touches.length === 0) {
+      if (this.isDragging && !this.dragMoved && e.changedTouches.length) {
+        const t = e.changedTouches[0];
+        this.selectSeatAtClient(t.clientX, t.clientY);
+      }
+      this.isDragging = false;
+      this.pinchStartDist = null;
+    } else if (e.touches.length === 1) {
+      // One finger lifted out of a pinch, resume panning from the remaining finger.
+      this.isDragging = true;
+      this.dragMoved = false;
+      this.dragStartX = e.touches[0].clientX;
+      this.dragStartY = e.touches[0].clientY;
+      this.pinchStartDist = null;
     }
   }
 
